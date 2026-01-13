@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, initDb } from '@/lib/db';
+import { initDb } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +9,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    await initDb();
+    const db = await initDb();
+    
+    // If no database, return success anyway (just won't persist)
+    if (!db) {
+      console.warn('Database not available - letter not saved');
+      return NextResponse.json({ success: true, warning: 'Database not configured' });
+    }
 
     // Upsert the letter
     await db.execute({
@@ -30,4 +36,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Database error' }, { status: 500 });
   }
 }
-

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { db, initDb } from '@/lib/db';
+import { initDb } from '@/lib/db';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -22,19 +22,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the letter first
-    await initDb();
-    await db.execute({
-      sql: `
-        INSERT INTO letters (email, recipient_email, letter_content, updated_at)
-        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-        ON CONFLICT(email) DO UPDATE SET
-          recipient_email = excluded.recipient_email,
-          letter_content = excluded.letter_content,
-          updated_at = CURRENT_TIMESTAMP
-      `,
-      args: [senderEmail, recipientEmail, letterContent],
-    });
+    // Try to save the letter (optional - doesn't block sending)
+    try {
+      const db = await initDb();
+      if (db) {
+        await db.execute({
+          sql: `
+            INSERT INTO letters (email, recipient_email, letter_content, updated_at)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(email) DO UPDATE SET
+              recipient_email = excluded.recipient_email,
+              letter_content = excluded.letter_content,
+              updated_at = CURRENT_TIMESTAMP
+          `,
+          args: [senderEmail, recipientEmail, letterContent],
+        });
+      }
+    } catch (dbError) {
+      console.warn('Failed to save letter to database:', dbError);
+      // Continue with sending - database save is optional
+    }
 
     // Use sender name for the from field, fallback to "Letter Lab"
     const fromName = senderName || 'Letter Lab';
@@ -111,4 +118,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

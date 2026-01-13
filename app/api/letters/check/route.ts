@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, initDb } from '@/lib/db';
+import { initDb } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   const email = request.nextUrl.searchParams.get('email');
@@ -9,7 +9,12 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    await initDb();
+    const db = await initDb();
+    
+    // If no database, just return no letter found
+    if (!db) {
+      return NextResponse.json({ exists: false, hasLetter: false });
+    }
     
     const result = await db.execute({
       sql: 'SELECT id, letter_content FROM letters WHERE email = ?',
@@ -28,7 +33,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ exists: false, hasLetter: false });
   } catch (error) {
     console.error('Database error:', error);
-    return NextResponse.json({ error: 'Database error' }, { status: 500 });
+    return NextResponse.json({ exists: false, hasLetter: false });
   }
 }
-
