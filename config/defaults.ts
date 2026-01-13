@@ -16,6 +16,7 @@ export interface LetterConfig {
   vatId?: string;
   taxId?: string;
   closing: string;
+  signatureEmail?: string;
   signature?: string;
   placeholders: {
     address: string;
@@ -39,7 +40,7 @@ export const defaultConfig: LetterConfig = {
   title: 'Letter',
   dateFormat: { day: '2-digit', month: 'long', year: 'numeric' },
   locale: 'en-US',
-  name: 'John Doe',
+  name: 'Dan',
   street: 'Infinite Loop 12',
   city: '34512 Examplia',
   country: 'Germany',
@@ -52,11 +53,12 @@ export const defaultConfig: LetterConfig = {
   bic: 'GENODEM1GLS',
   vatId: 'DE 2128127981729',
   taxId: '31281/12912',
-  closing: 'All the best,',
+  closing: 'Talk soon,',
+  signatureEmail: 'd_schmidt@coloradocollege.edu',
   placeholders: {
     address: 'Acme Corp.<br>Sesamestreet 23<br>12345 Gotham City<br>USA',
     subject: 'Subject',
-    text: '<p>Dear…</p><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>',
+    text: '<p>Dear...</p><p>Start typing to begin your letter. This placeholder text will disappear when you type your first character.</p><p>Note: There is no backspace here. If you make a mistake, select the text and use the scribble tool to cross it out, just like a real handwritten letter.</p>',
   },
   labels: {
     phone: 'Phone',
