@@ -311,35 +311,101 @@ body {
   background-color: transparent;
 }
 
-/* Email Panel */
-.email-panel {
+/* Collapsible Panel Containers */
+.panel-container {
   position: fixed;
   top: 20px;
-  left: 20px;
   z-index: 100;
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  min-width: 320px;
+  display: flex;
+  align-items: flex-start;
+  transition: transform 0.3s ease;
 }
 
-.email-panel input {
+.panel-container .panel-content {
+  background: white;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.panel-container .panel-handle {
+  flex-shrink: 0;
+  width: 20px;
+  height: 64px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  transition: color 0.15s ease;
+}
+
+.panel-container .panel-handle:hover {
+  color: #666;
+}
+
+/* Left Panel */
+.panel-left {
+  left: 20px;
+  flex-direction: row;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.panel-left .panel-content {
+  min-width: 320px;
+  box-shadow: none;
+}
+
+.panel-left .panel-handle {
+  border-left: 1px solid #eee;
+}
+
+.panel-left.closed {
+  transform: translateX(calc(-100% + 20px));
+}
+
+.panel-left.closed .panel-content {
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Right Panel */
+.panel-right {
+  right: 20px;
+  flex-direction: row;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.panel-right .panel-content {
+  width: 280px;
+  box-shadow: none;
+}
+
+.panel-right .panel-handle {
+  border-right: 1px solid #eee;
+}
+
+.panel-right.closed {
+  transform: translateX(calc(100% - 20px));
+}
+
+.panel-right.closed .panel-content {
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Email Panel Input */
+.panel-left input {
   font-size: 14px;
 }
 
-/* Info Panel */
-.info-panel {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 100;
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 280px;
-}
 
 
 /* Attribution */
@@ -387,8 +453,7 @@ body {
   }
 
   .selection-tools,
-  .email-panel,
-  .info-panel,
+  .panel-container,
   .attribution {
     display: none;
   }

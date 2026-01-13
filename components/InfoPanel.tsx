@@ -4,7 +4,7 @@ import { Pencil, Type, Image, Send, Eye, MessageSquare } from 'lucide-react';
 
 export function InfoPanel() {
   return (
-    <div className="info-panel">
+    <>
       <h3 className="text-sm font-semibold text-gray-900 mb-4">How it works</h3>
       
       <div className="space-y-4">
@@ -68,6 +68,6 @@ export function InfoPanel() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

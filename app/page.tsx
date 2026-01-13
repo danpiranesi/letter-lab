@@ -7,12 +7,15 @@ import { EmailPanel } from '@/components/EmailPanel';
 import { FontSelector, FontOption, InkColor, getFontFamily, getInkColor } from '@/components/FontSelector';
 import { InfoPanel } from '@/components/InfoPanel';
 import { defaultConfig } from '@/config/defaults';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const [myEmail, setMyEmail] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
   const [selectedFont, setSelectedFont] = useState<FontOption>('times-new-roman');
   const [selectedInk, setSelectedInk] = useState<InkColor>('black');
+  const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+  const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const letterRef = useRef<HTMLDivElement>(null);
 
   // Format the current date
@@ -101,25 +104,50 @@ export default function Home() {
 
   return (
     <>
-      <div className="email-panel">
-        <EmailPanel
-          myEmail={myEmail}
-          recipientEmail={recipientEmail}
-          onMyEmailChange={setMyEmail}
-          onRecipientEmailChange={setRecipientEmail}
-          onSave={handleSave}
-          onSend={handleSend}
-          onLetterFound={handleLetterFound}
-        />
-        <div className="pt-4 mt-4 border-t border-gray-200">
-          <FontSelector 
-            selectedFont={selectedFont} 
-            onFontChange={setSelectedFont}
-            selectedInk={selectedInk}
-            onInkChange={setSelectedInk}
+      {/* Left Panel - Email & Settings */}
+      <div className={`panel-container panel-left ${leftPanelOpen ? 'open' : 'closed'}`}>
+        <div className="panel-content">
+          <EmailPanel
+            myEmail={myEmail}
+            recipientEmail={recipientEmail}
+            onMyEmailChange={setMyEmail}
+            onRecipientEmailChange={setRecipientEmail}
+            onSave={handleSave}
+            onSend={handleSend}
+            onLetterFound={handleLetterFound}
           />
+          <div className="pt-4 mt-4 border-t border-gray-200">
+            <FontSelector 
+              selectedFont={selectedFont} 
+              onFontChange={setSelectedFont}
+              selectedInk={selectedInk}
+              onInkChange={setSelectedInk}
+            />
+          </div>
+        </div>
+        <button 
+          className="panel-handle"
+          onClick={() => setLeftPanelOpen(!leftPanelOpen)}
+          aria-label={leftPanelOpen ? 'Close panel' : 'Open panel'}
+        >
+          {leftPanelOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+        </button>
+      </div>
+
+      {/* Right Panel - Info */}
+      <div className={`panel-container panel-right ${rightPanelOpen ? 'open' : 'closed'}`}>
+        <button 
+          className="panel-handle"
+          onClick={() => setRightPanelOpen(!rightPanelOpen)}
+          aria-label={rightPanelOpen ? 'Close panel' : 'Open panel'}
+        >
+          {rightPanelOpen ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+        <div className="panel-content">
+          <InfoPanel />
         </div>
       </div>
+
       <div ref={letterRef}>
         <Letter 
           config={defaultConfig} 
@@ -129,7 +157,6 @@ export default function Home() {
         />
       </div>
       <SelectionTools />
-      <InfoPanel />
       <div className="attribution">
         <a 
           href="https://github.com/danpiranesi/letter-lab" 
